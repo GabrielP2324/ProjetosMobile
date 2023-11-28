@@ -1,30 +1,27 @@
-var PIZZARIA_ID = "Pizzageddon";
 var listaPizzasCadastradas = [];
 
 document.addEventListener('deviceready', onDeviceReady, false);
 
 function onDeviceReady() {
-    loadPizzas();
-    // Cordova is now initialized. Have fun!
-    alert("Bem vindo ao Pizzageddon");
+    pegar_Pizzas();
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-    document.getElementById('btnNovo').addEventListener('click', newPizza);
-    document.getElementById('btnCreate').addEventListener('click', create);
-    document.getElementById('btnCancel').addEventListener('click', cancel);
+    document.getElementById('btnNovo').addEventListener('click', nova_Pizza);
+    document.getElementById('btnCreate').addEventListener('click', Criar);
+    document.getElementById('btnCancel').addEventListener('click', Cancelar);
     var listaPizzas = document.getElementById('listaPizzas');
-    document.getElementById('btnSave').addEventListener('click', save);
-    document.getElementById('btnExclude').addEventListener('click', exclude);
+    document.getElementById('btnSave').addEventListener('click', Salvar);
+    document.getElementById('btnExclude').addEventListener('click', Excluir);
     cordova.plugin.http.setDataSerializer('json');
 }
 
-function exclude(id){
-    cordova.plugin.http.delete(`https://pedidos-pizzaria.glitch.me/admin/pizza/Pizzageddon/${pizza.pizza}`,
+function Excluir(id){
+    cordova.plugin.http.delete(`https://pedidos-pizzaria.glitch.me/admin/pizza/JuliasPizza/${pizza.pizza}`,
         {},
         {},
         function(response){
             console.log(response.data)
-            unshow();
-            loadPizzas();
+            esconder();
+            pegar_Pizzas();
         },
         function(response){
             console.log(response.error)
@@ -32,8 +29,8 @@ function exclude(id){
     
 }
 
-function save(){
-    pizzaOld = {
+function Salvar(){
+    pizza_temp = {
         pizzaid: pizza._id,
         pizzaria: pizza.pizzaria,
         pizza: document.getElementById('pizza').value,
@@ -41,28 +38,28 @@ function save(){
         imagem: document.getElementById('imagem').value
     };
     cordova.plugin.http.put('https://pedidos-pizzaria.glitch.me/admin/pizza/',
-    pizzaOld,
+    pizza_temp,
     {},
     function (response) {
-        loadPizzas();
-        unshow();
+        pegar_Pizzas();
+        esconder();
     },
     function (response) {
         console.error(response.error);
     });
 }
 
-function show(){
+function mostrar(){
     applista.style.display = 'none';
     appcadastro.style.display = 'block';
     btnExclude.style.display = 'none';
 }
-function unshow(){
+function esconder(){
     applista.style.display = 'block';
     appcadastro.style.display = 'none';
 }
-function newPizza(){
-    show();
+function nova_Pizza(){
+    mostrar();
     btnCreate.style.display = 'block';
     btnSave.style.display = 'none';
     document.getElementById('pizza').value = '';
@@ -70,28 +67,28 @@ function newPizza(){
     document.getElementById('imagem').value = '';
 }
 
-function cancel(){
+function Cancelar(){
     applista.style.display = 'block';
     appcadastro.style.display = 'none';
 }
 
-function create(){
+function Criar(){
     var pizza = document.getElementById('pizza').value;
     var preco = document.getElementById('preco').value;
-    let imagem = 'https://media.tenor.com/uarApvGaKDcAAAAM/panut-butter-jelly-time-dancing.gif';
+    let imagem = 'https://drpizza.grandchef.com.br/storage/images/produto/972b2412f83785054e960273f97cdec6.png';
     var novaPizza = {
         pizza: pizza,
         preco: preco,
         imagem: imagem,
-        pizzaria: PIZZARIA_ID
+        pizzaria: 'JuliasPizza'
     };
     cordova.plugin.http.post('https://pedidos-pizzaria.glitch.me/admin/pizza/',
     novaPizza,
     {},
     function (response) {
         console.log(response.data);
-        loadPizzas();
-        unshow();
+        pegar_Pizzas();
+        esconder();
     },
     function (response) {
         console.error(response.error);
@@ -103,7 +100,7 @@ function carregarDadosPizza (id) {
     document.getElementById('pizza').value = pizza.pizza;
     document.getElementById('preco').value = pizza.preco;
     document.getElementById('imagem').value = pizza.imagem;
-    show();
+    mostrar();
     btnExclude.style.display = 'block';
     btnSave.style.display = 'block';
     btnCreate.style.display = 'none';
@@ -112,8 +109,8 @@ function alterarPizza (id, list) {
   
 }
 
-function loadPizzas(){
-    cordova.plugin.http.get('https://pedidos-pizzaria.glitch.me/admin/pizzas/Pizzageddon',
+function pegar_Pizzas(){
+    cordova.plugin.http.get('https://pedidos-pizzaria.glitch.me/admin/pizzas/JuliasPizza',
     {},
     {},
     function (response) {
